@@ -13,7 +13,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import starter.actions.navigation.NavigateTo;
 import starter.actions.search.LookForInformation;
 
-@ExtendWith(SerenityJUnit5Extension.class)
+//@ExtendWith(SerenityJUnit5Extension.class)
 class WhenSearchingForTerms {
 
     @CastMember
