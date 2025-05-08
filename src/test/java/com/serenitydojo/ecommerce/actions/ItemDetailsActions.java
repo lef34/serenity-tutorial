@@ -19,4 +19,19 @@ public class ItemDetailsActions extends UIInteractions {
     public String itemClass(){
         return find(".page-title").getText();
     }
+
+    @Step("Select size")
+    public void clickOnSizeNumber(){
+        find(By.cssSelector("div[option-label=XS]")).click();
+    }
+
+    @Step("Select color")
+        public void clickOnColor(){
+        find("#option-label-color-93-item-59").click();
+    }
+
+    @Step("Add Item to cart")
+    public void clickAddToCartButton(){
+            find("#product-addtocart-button").click();
+    }
 }

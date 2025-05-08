@@ -1,13 +1,14 @@
 package com.serenitydojo.ecommerce.actions;
 
 import net.serenitybdd.annotations.Step;
+import net.serenitybdd.core.pages.PageObject;
 import net.serenitybdd.core.steps.UIInteractions;
 import net.serenitybdd.screenplay.ui.Button;
 import net.serenitybdd.screenplay.ui.InputField;
 import net.serenitybdd.screenplay.ui.Link;
 import org.openqa.selenium.By;
 
-public class AccountActions extends UIInteractions {
+public class AccountActions extends PageObject {
 
     @Step("Click on Create an Account option")
     public void createAccount(){
@@ -25,8 +26,8 @@ public class AccountActions extends UIInteractions {
     }
 
     @Step("Add Email")
-    public void addEmail(){
-        String email = randomEmail();
+    public void addEmail(String email){
+        //String email = randomEmail();
         find(InputField.withLabel("Email")).type(email);
     }
 
