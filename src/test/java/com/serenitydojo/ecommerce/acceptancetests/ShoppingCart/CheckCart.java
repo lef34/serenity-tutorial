@@ -3,6 +3,7 @@ package com.serenitydojo.ecommerce.acceptancetests.ShoppingCart;
 import com.serenitydojo.ecommerce.actions.CatalogActions;
 import com.serenitydojo.ecommerce.actions.ItemDetailsActions;
 import com.serenitydojo.ecommerce.actions.NavigationActions;
+import com.serenitydojo.ecommerce.pageobjects.ItemDetailsPage;
 import com.serenitydojo.ecommerce.pageobjects.ShoppingCardComponent;
 import net.serenitybdd.core.steps.UIInteractions;
 import net.serenitybdd.junit5.SerenityAfterEachCallback;
@@ -16,20 +17,44 @@ public class CheckCart extends UIInteractions {
     ShoppingCardComponent shopppingCart;
     CatalogActions selectItem;
     ItemDetailsActions itemDetails;
+    ItemDetailsPage itemDetailsPage;
 
-    //Purpose of this test it to showcase how to locate elements via css classes
+    //Shopping Cart check by adding one item to the cart
     @Test
     void shoppingCartCheck(){
         navigation.openWebPage("https://magento.softwaretestingboard.com/");
-        //find(".showcart").click();
         selectItem.accessItemDetails("Breathe-Easy Tank");
         itemDetails.clickOnSizeNumber();
         itemDetails.clickOnColor();
-        itemDetails.clickAddToCartButton();
+        //itemDetails.clickAddToCartButton();
+        itemDetailsPage.addToCart();
         shopppingCart.showCartSummary();
         shopppingCart.clickProceedToCheckout();
 
         //waitForTextToAppear("You have no items in your shopping cart.");
+
+    }
+
+    //Add two items in the cart
+    @Test
+    void addTwoItemsInTheCart(){
+        //Adding first item
+        navigation.openWebPage("https://magento.softwaretestingboard.com/");
+        selectItem.accessItemDetails("Breathe-Easy Tank");
+        itemDetails.clickOnSizeNumber();
+        itemDetails.clickOnColor();
+        itemDetailsPage.addToCart();
+
+        //Adding second item
+        //navigation.openWebPage("https://magento.softwaretestingboard.com/");
+        //selectItem.accessItemDetails("Radiant Tee");
+        //itemDetails.clickOnSizeNumber();
+        //itemDetails.clickOnColor();
+        //itemDetailsPage.addToCart();
+
+
+        //Select the shopping cart button
+        shopppingCart.showCartSummary();
 
     }
 }

@@ -30,8 +30,8 @@ public class ItemDetailsActions extends UIInteractions {
         find("#option-label-color-93-item-59").click();
     }
 
-    @Step("Add Item to cart")
-    public void clickAddToCartButton(){
-            find("#product-addtocart-button").click();
-    }
+    //@Step("Add Item to cart")
+    //public void clickAddToCartButton(){
+    //      find("#product-addtocart-button").click();
+    //}
 }
