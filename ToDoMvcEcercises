@@ -1,0 +1,194 @@
+package todomvc;
+
+import net.serenitybdd.core.steps.UIInteractions;
+import net.serenitybdd.junit5.SerenityJUnit5Extension;
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import todomvcActions.ToDoListActions;
+
+\\AddingTasks
+@ExtendWith(SerenityJUnit5Extension.class)
+public class WhenAddingTasks extends UIInteractions {
+
+
+    ToDoListActions todolist = new ToDoListActions();
+
+
+    // TODO: Exercise 1
+    @Test
+    public void addingASingleTask() {
+        //Open Browser
+        todolist.openApp();
+
+        // Add "Feed The Cat" to the list
+        todolist.addItem("Feed the Cat");
+
+        // Check that "Feed The Cat" appears in the list
+        Assertions.assertThat(todolist.items()).contains("Feed the Cat");
+    }
+
+    // TODO: Exercise 2
+    @Test
+    public void addingMultipleTasks() {
+        //Open Browser
+        todolist.openApp();
+        // Add "Feed The Cat" and "Walk the dog" to the list
+        todolist.addItems("Feed The Cat", "Walk the dog");
+        // Check that they all appear in the list
+        Assertions.assertThat(todolist.items()).containsExactly("Feed The Cat", "Walk the dog");
+    }
+
+}
+
+//WhenCompletingATask
+
+package todomvc;
+
+import net.serenitybdd.annotations.Steps;
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import todomvcActions.ToDoListActions;
+
+public class WhenCompletingATask {
+
+
+    @Steps
+    ToDoListActions todolist = new ToDoListActions();
+
+    @AfterEach
+    void cleanUpValues()
+    {
+        todolist.filterBy("All");
+        todolist.deleteItem("Feed the cat");
+        todolist.deleteItem("Walk the dog");
+    }
+
+
+    // TODO: Exercise 3
+    @Test
+    public void activeTasksShouldNotShowCompletedTasks() {
+        //Open Browser
+        todolist.openApp();
+        // Add "Feed the cat" and "Walk the dog" to the list
+        todolist.addItems("Feed the cat", "Walk the dog");
+        // Complete "Feed the cat"
+        todolist.completeItem("Feed the cat");
+        // Filter by "Active"
+        todolist.filterBy("Active");
+        // Check that only "Walk the dog" appears
+        Assertions.assertThat(todolist.items()).containsExactly("Walk the dog");
+    }
+
+    // TODO: Exercise 4
+    @Test
+    public void completedTasksShouldNotShowActiveTasks() {
+        //Open Browser
+        todolist.openApp();
+        // Add "Feed the cat" and "Walk the dog" to the list
+        todolist.addItems("Feed the cat", "Walk the dog");
+        // Complete "Feed the cat"
+        todolist.completeItem("Feed the cat");
+        // Filter by "Completed"
+        todolist.filterBy("Completed");
+        // Check that only "Feed the cat" appears
+        Assertions.assertThat(todolist.items()).containsExactly("Feed the cat");
+    }
+}
+
+
+//WhenDeletingATask
+
+package todomvc;
+
+import net.serenitybdd.annotations.Steps;
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
+import todomvcActions.ToDoListActions;
+
+public class WhenDeletingATask {
+
+    @Steps
+    ToDoListActions todolist = new ToDoListActions();
+
+
+    // TODO: Exercise 5
+    @Test
+    public void deletedItemsShouldDissapearFromTheList() {
+        //Open Browser
+        todolist.openApp();
+        // Add "Feed the cat" and "Walk the dog" to the list
+        todolist.addItems("Feed the cat", "Walk the dog");
+        // Delete "Feed the cat"
+        todolist.deleteItem("Feed the cat");
+        // Check that only "Walk the dog" appears
+        Assertions.assertThat(todolist.items()).containsExactly("Walk the dog");
+    }
+}
+
+//WhenFilteringATask
+package todomvc;
+
+import net.serenitybdd.annotations.Steps;
+import net.serenitybdd.core.steps.UIInteractions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import todomvcActions.ToDoListActions;
+
+import java.util.List;
+
+
+import static java.util.Arrays.asList;
+import static net.serenitybdd.core.Serenity.reportThat;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+
+public class WhenFilteringTasks extends UIInteractions {
+
+    @Steps
+    ToDoListActions todolist = new ToDoListActions();
+
+    @BeforeEach
+    void openBrowser()
+    {
+        todolist.openApp();
+    }
+
+    @AfterEach
+    void cleanUpValues()
+    {
+        todolist.filterBy("All");
+        todolist.deleteItem("Feed the cat");
+        todolist.deleteItem("Walk the dog");
+    }
+
+
+    @ParameterizedTest(name = "Items should be correctly filtered by status: {0}")
+    @CsvSource({
+            "Active, Feed the cat;Walk the dog, Feed the cat, Walk the dog",
+            "Completed, Feed the cat;Walk the dog, Feed the cat, Feed the cat",
+            "All, Feed the cat;Walk the dog, Feed the cat, Feed the cat;Walk the dog",
+    })
+    public void toDoListAdditionsCheck(String filterBy,
+                                       String todoItems,
+                                       String completeItem,
+                                       String filteredItem){
+
+        // Add "Feed the cat" and "Walk the dog" to the list
+        todolist.addItems(listFrom(todoItems));
+        //CompleteItem
+        todolist.completeItem(completeItem);
+        //filter by
+        todolist.filterBy(filterBy);
+        reportThat("The todo list should contain the following items", () -> assertThat(todolist.items()).hasSameElementsAs(listFrom(filteredItem)));
+
+
+    }
+
+    private List<String> listFrom(String items) {
+        return asList(items.split(";"));
+    }
+
+}
