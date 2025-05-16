@@ -1,0 +1,72 @@
+//ToDoListActions
+
+package todomvcActions;
+
+import net.serenitybdd.annotations.Step;
+import net.serenitybdd.core.steps.UIInteractions;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+
+import java.util.List;
+
+import static todomvcActions.ToDoListForm.ITEM_LABELS;
+import static todomvcActions.ToDoListForm.TODO_FIELD;
+
+public class ToDoListActions extends UIInteractions {
+
+    @Step("Adding item '{0}'")
+    public void addItem(String item){
+        find(TODO_FIELD).type(item).sendKeys(Keys.ENTER);
+    }
+
+    public List<String> items (){
+        return findAll(ITEM_LABELS).texts();
+    }
+
+    @Step("Open ToDo Web Browser")
+    public void openApp() {
+        openPageNamed("home");
+    }
+
+    @Step("Add items {0}")
+    public void addItems(List<String> items){
+        items.forEach(this::addItem);
+    }
+
+
+    @Step("Add multiple items {0}")
+    public void addItems(String... items) {
+        for (String item : items){
+            addItem(item);
+        }
+    }
+
+    public void completeItem(String itemName) {
+        find(By.xpath("//label[contains(text(),'" + itemName + "')]/../input[@type='checkbox']")).click();
+    }
+
+    public void filterBy(String status) {
+        find(By.xpath("//a[contains(text(), '" + status + "')]")).click();
+    }
+
+    public void deleteItem(String itemName) {
+        //hover over element
+        find(By.xpath("//label[contains(text(),'" + itemName + "')]")).click();
+        find(By.xpath("//label[contains(text(),'" + itemName + "')]/following-sibling::button[@class='destroy']")).click();
+    }
+
+}
+
+
+//TODoListForm
+
+package todomvcActions;
+
+import org.openqa.selenium.By;
+
+class ToDoListForm {
+    static final By TODO_FIELD = By.className("new-todo");
+    static final String ITEM_LABELS = ".todo-list label";
+    static final String HOVER_OVER_LABEL = "//label[.='{0}']";
+    static final By DELETE_ITEM = By.xpath("//label[.='{0}']/following-sibling::button[@class='destroy']");
+}
